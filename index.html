@@ -3,15 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login page</title>
+    <title>Login Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .btn-link {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #6200ea;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .btn-link:hover {
+            background-color: #4500b8;
+        }
+    </style>
 </head>
 <body>
-    <h1>
-        To start the journey pls click the link below
-    </h1>
-  <button>
-    <a href="login.php" > CLICK HERE TO PROCEED TO THE LOGIN PAGE
-    </a>
-  </button>
+    <h1>To start the journey, please click the link below</h1>
+    <a href="login.php" class="btn-link">CLICK HERE TO PROCEED TO THE LOGIN PAGE</a>
 </body>
 </html>
