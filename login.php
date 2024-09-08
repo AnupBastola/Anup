@@ -1,59 +1,49 @@
-<?php
-// Connect to the database
-$conn = new mysqli('localhost', 'root', '', 'ecommerce');
+<?php 
+session_start(); 
+include "db_conn.php";
 
-// Check connection
-if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
+if (isset($_POST['uname']) && isset($_POST['password'])) {
+
+	function validate($data){
+       $data = trim($data);
+	   $data = stripslashes($data);
+	   $data = htmlspecialchars($data);
+	   return $data;
+	}
+
+	$uname = validate($_POST['uname']);
+	$pass = validate($_POST['password']);
+
+	if (empty($uname)) {
+		header("Location: index.php?error=User Name is required");
+	    exit();
+	}else if(empty($pass)){
+        header("Location: index.php?error=Password is required");
+	    exit();
+	}else{
+		$sql = "SELECT * FROM users WHERE user_name='$uname' AND password='$pass'";
+
+		$result = mysqli_query($conn, $sql);
+
+		if (mysqli_num_rows($result) === 1) {
+			$row = mysqli_fetch_assoc($result);
+            if ($row['user_name'] === $uname && $row['password'] === $pass) {
+            	$_SESSION['user_name'] = $row['user_name'];
+            	$_SESSION['name'] = $row['name'];
+            	$_SESSION['id'] = $row['id'];
+            	header("Location: home.php");
+		        exit();
+            }else{
+				header("Location: index.php?error=Incorect User name or password");
+		        exit();
+			}
+		}else{
+			header("Location: index.php?error=Incorect User name or password");
+	        exit();
+		}
+	}
+	
+}else{
+	header("Location: index.php");
+	exit();
 }
-
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Retrieve user data
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            echo 'Login successful! Redirecting to products page...';
-            header('Location: products.html');
-            exit;
-        } else {
-            echo 'Invalid email or password.';
-        }
-    } else {
-        echo 'No user found with that email.';
-    }
-}
-
-$conn->close();
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="stylelogin.css">
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="POST" action="login.php">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Login</button>
-    </form>
-
-    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
-</body>
-</html>
